@@ -73,6 +73,18 @@ static async deletarPessoa(req, res) {
   }
  
 }
+static async restauraPessoa(req, res) {
+  const {id} = req.params
+
+  try{
+      await database.Pessoas.restore({where: {id: Number(id)}}) 
+      return res.status(20).json({mensagem: `id: ${id} restaurado com sucesso.`})  
+  }
+  catch(error){
+    return res.status(500).json(error.message)
+  }
+ 
+}
 
 static async pegaUmaMatricula(req, res){
   const {estudanteId, matriculaId} = req.params
