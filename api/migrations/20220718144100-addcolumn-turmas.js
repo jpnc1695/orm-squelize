@@ -7,6 +7,6 @@ module.exports = {
       })
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn('Turmas', 'deletedAt');
+    await queryInterface.removeColumn('Turmas', 'deleteAt');
   }
 };
