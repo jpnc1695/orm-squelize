@@ -1,4 +1,5 @@
 const database = require('../models')
+const Sequelize = require('sequelize')
 
 class PessoaController {
 
@@ -187,6 +188,47 @@ static async pegaMatricula(req, res) {
       const matriculas = await pessoa.getAulasMatriculadas()
       /* const matriculas = await database.Matriculas.findAll({ where:{estudante_id:Number (estudanteId)}}) */
       return res.status(200).json(matriculas)      
+  }
+  catch(error){
+    return res.status(500).json(error.message)
+  }
+ 
+}
+
+static async pegaMatriculaPorTurma(req, res) {
+  const {turmaId} = req.params
+
+  try{
+    const todasAsMatriculas = await database.Matriculas.findAndCountAll({
+      where: {
+        turma_id :Number(turmaId),
+        status:'confirmado'
+      },
+      limit: 10,
+      order: [['estudante_id', 'DESC']],
+    })
+   return res.status(200).json(todasAsMatriculas)
+  }
+  catch(error){
+    return res.status(500).json(error.message)
+  }
+ 
+}
+
+static async pegaTurmasLotadas(req, res) {
+  const lotacaoTurmas = 2;
+
+  try{
+    const turmasLotadas = await database.Matriculas.findAndCountAll({
+      where: {
+        status: 'confirmado'
+      },
+      attributes: ['turma_id'],
+      group: ['turma_id'],
+      having: Sequelize.literal(`count(turma_id) >= ${lotacaoTurmas}`)
+
+    })  
+    return res.status(200).json(turmasLotadas.count)
   }
   catch(error){
     return res.status(500).json(error.message)
