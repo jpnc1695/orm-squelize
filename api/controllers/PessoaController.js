@@ -1,13 +1,13 @@
 /* const database = require('../models')
 const Sequelize = require('sequelize') */
-const PessoasServices = require('../services/PessoasServices')
-const pessoasService = new PessoasServices
+const {PessoasServices} = require('../services/index')
+const pessoasService = new PessoasServices()
 
 class PessoaController {
 
  static async pegaPessoasAtivas(req, res){
   try{
-    const PessoasAtivas = await pessoasService.pegaTodosOsRegistros()
+    const PessoasAtivas = await pessoasService.pegaRegistrosAtivos()
     return res.status(200).json(PessoasAtivas)
    }
    catch(error){
@@ -18,7 +18,7 @@ class PessoaController {
  
  static async pegaTodasAsPessoas(req, res){
   try{
-    const todasAsPessoas = await database.Pessoas.scope('todos').findAll()
+    const todasAsPessoas = await pessoasService.pegaTodosOsRegistros()
     return res.status(200).json(todasAsPessoas)
    }
    catch(error){
