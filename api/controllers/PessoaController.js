@@ -101,6 +101,38 @@ static async restauraPessoa(req, res) {
  
 }
 
+static async pegaTurmasLotadas(req, res) {
+  const lotacaoTurmas = 2;
+
+  try{
+    const turmasLotadas = await database.Matriculas.findAndCountAll({
+      where: {
+        status: 'confirmado'
+      },
+      attributes: ['turma_id'],
+      group: ['turma_id'],
+      having: Sequelize.literal(`count(turma_id) >= ${lotacaoTurmas}`)
+
+    })  
+    return res.status(200).json(turmasLotadas.count)
+  }
+  catch(error){
+    return res.status(500).json(error.message)
+  }
+ 
+}
+
+static async cancelaPessoa(req, res) {
+  const {estudanteId} = req.params
+
+  try{
+     pessoasService.cancelaPessoasEMatricula(Number(estudanteId))
+  }
+  catch(error){
+    return res.status(500).json(error.message)
+  } 
+}
+
 
 }
 
