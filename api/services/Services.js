@@ -5,8 +5,8 @@ class Services {
       this.nomeDoModelo = nomeDoModelo
     }
 
-    async pegaTodosOsRegistros(){
-      return database[this.nomeDoModelo].findAll()
+    async pegaTodosOsRegistros(where = {}){
+      return database[this.nomeDoModelo].findAll({where: {...where}})
     }
 
     async PegaUmRegistro(id) {
